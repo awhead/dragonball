@@ -19,7 +19,7 @@ public class Play {
 
     private static Scanner scanner;
 
-    public static void play(PlayerVO[] player) {
+    public void play(PlayerVO[] player) {
 
 	scanner = new Scanner(System.in);
 
@@ -52,8 +52,8 @@ public class Play {
 		break;
 	    }
 	    /*
-	     * TODO:버전업시 승리 이후 난이도가 상승하여 더 강한 상대 등장 승리 수 카운트 변수를 만들고,
-	     * 상대 체력이 0이 되었을때, 위너 시점에서 승리 수 카운트가 남아있으면 봇을 새로 생성
+	     * TODO:버전업시 승리 이후 난이도가 상승하여 더 강한 상대 등장 승리 수 카운트 변수를 만들고, 상대 체력이 0이 되었을때, 위너
+	     * 시점에서 승리 수 카운트가 남아있으면 봇을 새로 생성
 	     */
 	    System.out.println();
 	    System.out.println("==================================================================");
@@ -62,6 +62,16 @@ public class Play {
 
 	}
 
+    }
+
+    public void clientSender(PlayerVO player) {
+	initStatus(player);
+	inputAction(player);
+    }
+
+    public void serverReceiver(PlayerVO player) {
+	kiCount(player);
+	
     }
 
     static void initStatus(PlayerVO player) {
