@@ -17,150 +17,148 @@ import java.util.Scanner;
 
 public class Play {
 
-    private static Scanner scanner;
+    private static Scanner scanner = new Scanner(System.in);;
 
     public void play(PlayerVO[] player) {
 
-	scanner = new Scanner(System.in);
+        // 이길 때 까지 반복
+        while (true) {
+            initStatus(player[0]);
+            initStatus(player[1]);
 
-	// 이길 때 까지 반복
-	while (true) {
-	    initStatus(player[0]);
-	    initStatus(player[1]);
+            // 동작판단
+            inputAction(player[0]);
+            inputAction(player[1]);
 
-	    // 동작판단
-	    inputAction(player[0]);
-	    inputAction(player[1]);
+            // 기 모으기
+            // 공격하면 기 감소
+            kiCount(player[0]);
+            kiCount(player[1]);
 
-	    // 기 모으기
-	    // 공격하면 기 감소
-	    kiCount(player[0]);
-	    kiCount(player[1]);
+            // 상대가 기를 모을때 공격하면 체력감소
+            attack(player[0], player[1]);
 
-	    // 상대가 기를 모을때 공격하면 체력감소
-	    attack(player[0], player[1]);
+            printMessage(player[1]);
+            printMessage(player[0]);
 
-	    printMessage(player[1]);
-	    printMessage(player[0]);
+            if (isWin(player[0])) {
+                System.out.println(player[1].getPlayerName() + " 승리!");
+                break;
+            }
+            if (isWin(player[1])) {
+                System.out.println(player[0].getPlayerName() + " 승리!");
+                break;
+            }
+            /*
+             * TODO:버전업시 승리 이후 난이도가 상승하여 더 강한 상대 등장 승리 수 카운트 변수를 만들고, 상대 체력이 0이 되었을때, 위너
+             * 시점에서 승리 수 카운트가 남아있으면 봇을 새로 생성
+             */
+            System.out.println();
+            System.out.println("==================================================================");
+            System.out.println("==================================================================");
+            System.out.println("\n\n");
 
-	    if (isWin(player[0])) {
-		System.out.println(player[1].getPlayerName() + " 승리!");
-		break;
-	    }
-	    if (isWin(player[1])) {
-		System.out.println(player[0].getPlayerName() + " 승리!");
-		break;
-	    }
-	    /*
-	     * TODO:버전업시 승리 이후 난이도가 상승하여 더 강한 상대 등장 승리 수 카운트 변수를 만들고, 상대 체력이 0이 되었을때, 위너
-	     * 시점에서 승리 수 카운트가 남아있으면 봇을 새로 생성
-	     */
-	    System.out.println();
-	    System.out.println("==================================================================");
-	    System.out.println("==================================================================");
-	    System.out.println("\n\n");
-
-	}
+        }
 
     }
 
-    public void clientSender(PlayerVO player) {
-	initStatus(player);
-	inputAction(player);
+    public static void clientSender(PlayerVO player) {
+        initStatus(player);
+        inputAction(player);
     }
 
-    public void serverReceiver(PlayerVO player) {
-	kiCount(player);
-	
+    public static void serverReceiver(PlayerVO player) {
+        kiCount(player);
+
     }
 
-    static void initStatus(PlayerVO player) {
-	player.setHpStatus(false);
+    private static void initStatus(PlayerVO player) {
+        player.setHpStatus(false);
     }
 
     // 동작 판단
-    static void inputAction(PlayerVO player) {
+    private static void inputAction(PlayerVO player) {
 
-	// 사람이면 동작 입력
-	if (player.isPlayerBot() == false) {
+        // 사람이면 동작 입력
+        if (player.isPlayerBot() == false) {
 
-	    System.out.println("동작 입력");
-	    System.out.println("1.기모으기|2.막기|3.공격");
-	    System.out.println("----------------------");
-	    System.out.print("입력> ");
-	    player.setAction(scanner.nextInt());
-	    System.out.println();
+            System.out.println("동작 입력");
+            System.out.println("1.기모으기|2.막기|3.공격");
+            System.out.println("----------------------");
+            System.out.print("입력> ");
+            player.setAction(scanner.nextInt());
+            System.out.println();
 
-	    // 1,2,3외의 숫자는 잘못된 입력 --> 다시 시작
-	    if (player.getAction() < 1 || player.getAction() > 3) {
-		System.out.println("잘못된 수 입력");
-		inputAction(player);
-	    }
+            // 1,2,3외의 숫자는 잘못된 입력 --> 다시 시작
+            if (player.getAction() < 1 || player.getAction() > 3) {
+                System.out.println("잘못된 수 입력");
+                inputAction(player);
+            }
 
-	}
-	// bot이면 랜덤 동작
-	else if (player.isPlayerBot()) {
+        }
+        // bot이면 랜덤 동작
+        else if (player.isPlayerBot()) {
 
-	    player.setAction((int) (Math.random() * 3) + 1);
+            player.setAction((int) (Math.random() * 3) + 1);
 
-	}
+        }
 
-	// 기가 0이면 공격할 수 없다.
-	if (player.getAction() == 3 && player.getKiCount() <= 0) {
+        // 기가 0이면 공격할 수 없다.
+        if (player.getAction() == 3 && player.getKiCount() <= 0) {
 
-	    // 사람이면 메세지 출력
-	    if (player.isPlayerBot() == false) {
-		System.out.println("기가 0입니다. 다시 입력하세요");
-	    }
-	    inputAction(player);
-	}
+            // 사람이면 메세지 출력
+            if (player.isPlayerBot() == false) {
+                System.out.println("기가 0입니다. 다시 입력하세요");
+            }
+            inputAction(player);
+        }
 
     }
 
     // 기를 모으면 kiCount++, 공격하면 kiCount--
     static void kiCount(PlayerVO player) {
-	if (player.getAction() == 1) {
-	    player.setKiCount(player.getKiCount() + 1);
-	} else if (player.getAction() == 3) {
-	    player.setKiCount(player.getKiCount() - 1);
-	}
+        if (player.getAction() == 1) {
+            player.setKiCount(player.getKiCount() + 1);
+        } else if (player.getAction() == 3) {
+            player.setKiCount(player.getKiCount() - 1);
+        }
     }
 
     // 상대방이 기를 모을때 공격하면 체력 감소
-    static void attack(PlayerVO player1, PlayerVO player2) {
-	/*
-	 * TODO:true-false로 상태 확인해서 체력감소 사실이 확인되면 메세지 출력하는 방식으로
-	 */
-	if (player1.getAction() == 1 && player2.getAction() == 3) {
+    public static void attack(PlayerVO player1, PlayerVO player2) {
+        /*
+         * TODO:true-false로 상태 확인해서 체력감소 사실이 확인되면 메세지 출력하는 방식으로
+         */
+        if (player1.getAction() == 1 && player2.getAction() == 3) {
 
-	    player1.setHp(player1.getHp() - 1);
-	    player1.setHpStatus(true);
+            player1.setHp(player1.getHp() - 1);
+            player1.setHpStatus(true);
 
-	} else if (player1.getAction() == 3 && player2.getAction() == 1) {
+        } else if (player1.getAction() == 3 && player2.getAction() == 1) {
 
-	    player2.setHp(player2.getHp() - 1);
-	    player2.setHpStatus(true);
+            player2.setHp(player2.getHp() - 1);
+            player2.setHpStatus(true);
 
-	}
+        }
     }
 
     static boolean isWin(PlayerVO player) {
-	if (player.getHp() == 0) {
+        if (player.getHp() == 0) {
 
-	    return true;
-	}
-	return false;
+            return true;
+        }
+        return false;
     }
 
-    static void printMessage(PlayerVO player) {
-	System.out.println("\n");
-	System.out.println(player);
-	if (player.isHpStatus() == true) {
-	    System.out.println("////////" + player.getPlayerName() + " 체력 감소////////");
-	}
-	if (player.getHp() == 0) {
-	    System.out.println("////////" + player.getPlayerName() + " 사망////////");
-	}
+    public static void printMessage(PlayerVO player) {
+        System.out.println("\n");
+        System.out.println(player);
+        if (player.isHpStatus() == true) {
+            System.out.println("////////" + player.getPlayerName() + " 체력 감소////////");
+        }
+        if (player.getHp() == 0) {
+            System.out.println("////////" + player.getPlayerName() + " 사망////////");
+        }
 
     }
 
