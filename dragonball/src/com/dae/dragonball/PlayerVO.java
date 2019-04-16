@@ -15,6 +15,7 @@ public class PlayerVO implements Serializable {
     private boolean attackStatus;
     // 기를 모았는지 확인
     private boolean kiStatus;
+    private boolean isWin;
 
     public PlayerVO(boolean isPlayerBot, String playerName, int hp) {
         this.isPlayerBot = isPlayerBot;
@@ -54,6 +55,10 @@ public class PlayerVO implements Serializable {
         return kiStatus;
     }
 
+    public boolean isWin() {
+        return isWin;
+    }
+
     private void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
@@ -84,6 +89,10 @@ public class PlayerVO implements Serializable {
 
     private void setKiStatus(boolean kiStatus) {
         this.kiStatus = kiStatus;
+    }
+
+    public void setWin(boolean isWin) {
+        this.isWin = isWin;
     }
 
     @Override
