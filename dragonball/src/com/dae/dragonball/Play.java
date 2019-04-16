@@ -19,7 +19,7 @@ public class Play {
 
     private static Scanner scanner = new Scanner(System.in);;
 
-    public void play(PlayerVO[] player) {
+    public void singlePlay(PlayerVO[] player) {
 
         // 이길 때 까지 반복
         while (true) {
@@ -41,14 +41,7 @@ public class Play {
             printMessage(player[1]);
             printMessage(player[0]);
 
-            if (isWin(player[0])) {
-                System.out.println(player[1].getPlayerName() + " 승리!");
-                break;
-            }
-            if (isWin(player[1])) {
-                System.out.println(player[0].getPlayerName() + " 승리!");
-                break;
-            }
+            conWinner(player[0], player[1]);
             /*
              * TODO:버전업시 승리 이후 난이도가 상승하여 더 강한 상대 등장 승리 수 카운트 변수를 만들고, 상대 체력이 0이 되었을때, 위너
              * 시점에서 승리 수 카운트가 남아있으면 봇을 새로 생성
@@ -62,22 +55,12 @@ public class Play {
 
     }
 
-    public static void clientSender(PlayerVO player) {
-        initStatus(player);
-        inputAction(player);
-    }
-
-    public static void serverReceiver(PlayerVO player) {
-        kiCount(player);
-
-    }
-
-    private static void initStatus(PlayerVO player) {
+    public static void initStatus(PlayerVO player) {
         player.setHpStatus(false);
     }
 
     // 동작 판단
-    private static void inputAction(PlayerVO player) {
+    public static void inputAction(PlayerVO player) {
 
         // 사람이면 동작 입력
         if (player.isPlayerBot() == false) {
@@ -116,7 +99,7 @@ public class Play {
     }
 
     // 기를 모으면 kiCount++, 공격하면 kiCount--
-    static void kiCount(PlayerVO player) {
+    public static void kiCount(PlayerVO player) {
         if (player.getAction() == 1) {
             player.setKiCount(player.getKiCount() + 1);
         } else if (player.getAction() == 3) {
@@ -142,12 +125,14 @@ public class Play {
         }
     }
 
-    static boolean isWin(PlayerVO player) {
-        if (player.getHp() == 0) {
+    public static void conWinner(PlayerVO player1, PlayerVO player2) {
+        if (player1.getHp() == 0) {
 
-            return true;
+            player2.setWin(true);
+        } else if (player2.getHp() == 0) {
+            player1.setWin(true);
         }
-        return false;
+
     }
 
     public static void printMessage(PlayerVO player) {
@@ -158,6 +143,9 @@ public class Play {
         }
         if (player.getHp() == 0) {
             System.out.println("////////" + player.getPlayerName() + " 사망////////");
+        }
+        if (player.isWin()) {
+            System.out.println("++++++++" + player.getPlayerName() + " 승리++++++++");
         }
 
     }
