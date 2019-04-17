@@ -1,4 +1,4 @@
-package com.dae.dragonball;
+package com.dae.dragonball.play;
 
 public class Main {
 
