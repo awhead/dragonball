@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.dae.dragonball.PlayerVO;
+import com.dae.dragonball.play.PlayerVO;
 
 public class ServerMulti {
     private HashMap<String, ObjectOutputStream> playerMap;
@@ -58,14 +58,9 @@ public class ServerMulti {
                 ServerThread serverReceiver = new ServerThread(socket, playerMap, players);
                 Thread thread = new Thread(serverReceiver);
                 thread.start();
-                if (dis.readUTF() != null) {
-                    /*
-                     * 클라이언트가 나가도 서버가 종료되지 않도록 하려면? 재귀호출로 다시 시작하도록?
-                     */
-                    cnt--;
-                }
 
             }
+
         } catch (Exception e) {
             // TODO: handle exception
         }
