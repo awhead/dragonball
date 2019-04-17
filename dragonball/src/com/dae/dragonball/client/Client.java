@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-import com.dae.dragonball.PlayerVO;
+import com.dae.dragonball.play.PlayerVO;
 
 public class Client {
     static Scanner scanner = new Scanner(System.in);
@@ -42,9 +42,6 @@ public class Client {
 
         } catch (Exception e) {
         } finally {
-
-            System.out.println("경기를 종료합니다.");
-            System.exit(0);
 
         }
     }
