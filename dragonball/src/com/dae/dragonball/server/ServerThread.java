@@ -7,8 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.dae.dragonball.Play;
-import com.dae.dragonball.PlayerVO;
+import com.dae.dragonball.play.Play;
+import com.dae.dragonball.play.PlayerVO;
 
 public class ServerThread implements Runnable {
     HashMap<String, ObjectOutputStream> playerMap;
@@ -54,6 +54,7 @@ public class ServerThread implements Runnable {
 
                 System.out.println("run() is now running" + Thread.currentThread());
                 player = (PlayerVO) ois.readObject();
+                System.out.println(ois);
                 playerMap.put(player.getPlayerName(), oos);
                 System.out.println("Player " + player.getPlayerName() + " [actionValue]" + player.getAction());
                 Play.kiCount(player);
