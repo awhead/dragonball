@@ -5,8 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import com.dae.dragonball.Play;
-import com.dae.dragonball.PlayerVO;
+import com.dae.dragonball.play.Play;
+import com.dae.dragonball.play.PlayerVO;
 
 public class ClientThread implements Runnable {
     Socket socket;
@@ -50,11 +50,12 @@ public class ClientThread implements Runnable {
                         enemy = temp;
                     }
                 }
+                enemy.setPlayerName(enemy.getPlayerName()+"(상대방)");
                 Play.printMessage(enemy);
                 Play.printMessage(player);
                 if (player.isWin() || enemy.isWin()) {
-                    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                    dos.writeUTF("Exit");
+//                    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+//                    dos.writeUTF("Exit");
                     return;
                 }
                 System.out.println("================================\n");
@@ -62,6 +63,7 @@ public class ClientThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            System.out.println("경기를 종료합니다.");
 
         }
 
